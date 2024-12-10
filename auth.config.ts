@@ -8,7 +8,6 @@ export const authConfig = {
     callbacks: {
         authorized({ auth, request: { nextUrl } }) {
             const isLoggedIn = !!auth?.user;
-            console.log(`authorize() nextUrl ${nextUrl.toString()}`);
             const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
             if (isOnDashboard) {
                 if (isLoggedIn) return true;
@@ -18,5 +17,13 @@ export const authConfig = {
             }
             return true;
         },
+        redirect({ url, baseUrl }) {
+            if (url.startsWith(baseUrl)) {
+                Response.redirect(new URL(url));
+                return url;
+            } else {
+                return baseUrl;
+            }
+        }
     },
 } satisfies NextAuthConfig;
